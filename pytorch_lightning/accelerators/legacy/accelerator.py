@@ -71,7 +71,7 @@ class Accelerator(object):
     def batch_to_device(self, batch: Any, device: torch.device):
         model = self.trainer.get_model()
         if model is not None:
-            return model.prepare_batch_for_transfer(batch, device)
+            return model._prepare_batch_for_transfer(batch, device)
         return move_data_to_device(batch, device)
 
     def training_step_end(self, output):

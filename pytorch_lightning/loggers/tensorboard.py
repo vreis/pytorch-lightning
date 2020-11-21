@@ -199,7 +199,7 @@ class TensorBoardLogger(LightningLoggerBase):
                 input_array = model.example_input_array
 
             if input_array is not None:
-                input_array = model.prepare_batch_for_transfer(input_array)
+                input_array = model._prepare_batch_for_transfer(input_array)
                 self.experiment.add_graph(model, input_array)
             else:
                 rank_zero_warn('Could not log computational graph since the'
