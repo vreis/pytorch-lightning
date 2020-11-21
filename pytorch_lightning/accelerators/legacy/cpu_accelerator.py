@@ -61,11 +61,14 @@ class CPUAccelerator(Accelerator):
         return results
 
     def _step(self, model_step: Callable, args):
+        args[0] = self.to_device(args[0])
+
         if self.trainer.amp_backend == AMPType.NATIVE:
             with torch.cuda.amp.autocast():
                 output = model_step(*args)
         else:
             output = model_step(*args)
+
         return output
 
     def training_step(self, args):
@@ -80,10 +83,15 @@ class CPUAccelerator(Accelerator):
     def predict(self, args):
         return self._step(self.trainer.model.predict, args)
 
-    def sync_tensor(self,
-                    tensor: Union[torch.Tensor],
-                    group: Optional[Any] = None,
-                    reduce_op: Optional[Union[ReduceOp, str]] = None) -> torch.Tensor:
+    def to_device(self, batch):
+        return self.batch_to_device(batch)
+
+    def sync_tensor(
+        self,
+        tensor: Union[torch.Tensor],
+        group: Optional[Any] = None,
+        reduce_op: Optional[Union[ReduceOp, str]] = None
+    ) -> torch.Tensor:
         return tensor
 
     @property
