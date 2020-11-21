@@ -316,7 +316,7 @@ class ModelHooks:
 
 
 class DataHooks:
-    """Hooks to be used with LightningDataModule."""
+    """Hooks to be used for data related stuff."""
     def prepare_data(self) -> None:
         """
         Use this to download and prepare data.
@@ -570,6 +570,18 @@ class DataHooks:
         """
         device = device or self.device
         return move_data_to_device(batch, device)
+
+    def on_before_batch_transfer(self, batch):
+        return batch
+
+    def on_after_batch_transfer(self, batch):
+        return batch
+
+    def prepare_batch_for_transfer(self, batch: Any, device: Optional[torch.device] = None):
+        batch = self.on_before_batch_transfer(batch)
+        batch = self.transfer_batch_to_device(batch, device)
+        batch = self.on_after_batch_transfer(batch)
+        return batch
 
 
 class CheckpointHooks:
