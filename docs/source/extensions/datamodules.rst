@@ -287,10 +287,7 @@ transfer_batch_to_device
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Override to define how you want to move an arbitrary batch to a device.
 
-.. code-block:: python
-
-    import pytorch_lightning as pl
-
+.. testcode::
 
     class MNISTDataModule(pl.LightningDataModule):
         def transfer_batch_to_device(self, batch, device):
@@ -303,10 +300,7 @@ on_before_batch_transfer
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Override to alter or apply batch augmentations to your batch before it is transferred to the device.
 
-.. code-block:: python
-
-    import pytorch_lightning as pl
-
+.. testcode::
 
     class MNISTDataModule(pl.LightningDataModule):
         def on_before_batch_transfer(self, batch):
@@ -317,10 +311,7 @@ on_after_batch_transfer
 ^^^^^^^^^^^^^^^^^^^^^^^
 Override to alter or apply batch augmentations to your batch after it is transferred to the device.
 
-.. code-block:: python
-
-    import pytorch_lightning as pl
-
+.. testcode::
 
     class MNISTDataModule(pl.LightningDataModule):
         def on_after_batch_transfer(self, batch):
