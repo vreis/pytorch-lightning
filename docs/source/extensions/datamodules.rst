@@ -1,3 +1,7 @@
+.. testsetup:: *
+
+    from pytorch_lightning.core.datamodule import LightningDataModule
+
 .. _datamodules:
 
 LightningDataModule
@@ -289,10 +293,7 @@ Override to define how you want to move an arbitrary batch to a device.
 
 .. testcode::
 
-    import pytorch_lightning as pl
-
-
-    class MNISTDataModule(pl.LightningDataModule):
+    class MNISTDataModule(LightningDataModule):
         def transfer_batch_to_device(self, batch, device):
             x = batch['x']
             x = CustomDataWrapper(x)
@@ -305,10 +306,7 @@ Override to alter or apply batch augmentations to your batch before it is transf
 
 .. testcode::
 
-    import pytorch_lightning as pl
-
-
-    class MNISTDataModule(pl.LightningDataModule):
+    class MNISTDataModule(LightningDataModule):
         def on_before_batch_transfer(self, batch):
             batch['x'] = transforms(batch['x'])
             return batch
@@ -319,10 +317,7 @@ Override to alter or apply batch augmentations to your batch after it is transfe
 
 .. testcode::
 
-    import pytorch_lightning as pl
-
-
-    class MNISTDataModule(pl.LightningDataModule):
+    class MNISTDataModule(LightningDataModule):
         def on_after_batch_transfer(self, batch):
             batch['x'] = gpu_transforms(batch['x'])
             return batch
