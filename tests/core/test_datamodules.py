@@ -13,7 +13,7 @@
 # limitations under the License.
 import pickle
 from argparse import ArgumentParser
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 from unittest.mock import MagicMock
 
 import pytest
@@ -22,6 +22,7 @@ import torch
 from pytorch_lightning import LightningDataModule, Trainer
 from pytorch_lightning.accelerators.legacy.gpu_accelerator import GPUAccelerator
 from pytorch_lightning.callbacks import ModelCheckpoint
+from pytorch_lightning.utilities.model_utils import is_overridden
 from pytorch_lightning.trainer.states import TrainerState
 from tests.base import BoringDataModule, BoringModel
 from tests.base.develop_utils import reset_seed
@@ -408,35 +409,20 @@ def test_dm_prepare_batch_for_transfer(tmpdir):
         def on_before_batch_transfer(self, batch):
             self.on_before_batch_transfer_hook_rank = self.rank
             self.rank += 1
-
-            if isinstance(batch, CustomBatch):
-                batch.samples += 1
-            else:
-                batch = super().on_before_batch_transfer(batch)
-
+            batch.samples += 1
             return batch
 
         def on_after_batch_transfer(self, batch):
             self.on_after_batch_transfer_hook_rank = self.rank
             self.rank += 1
-
-            if isinstance(batch, CustomBatch):
-                batch.targets *= 2
-            else:
-                batch = super().on_after_batch_transfer(batch)
-
+            batch.targets *= 2
             return batch
 
         def transfer_batch_to_device(self, batch, device):
             self.transfer_batch_to_device_hook_rank = self.rank
             self.rank += 1
-
-            if isinstance(batch, CustomBatch):
-                batch.samples = batch.samples.to(device)
-                batch.targets = batch.targets.to(device)
-            else:
-                batch = super().transfer_batch_to_device(batch, device)
-
+            batch.samples = batch.samples.to(device)
+            batch.targets = batch.targets.to(device)
             return batch
 
     dm = CurrentTestDM()
