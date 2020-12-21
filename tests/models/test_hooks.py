@@ -99,7 +99,7 @@ def test_prepare_batch_for_transfer():
             self.samples = data[0]
             self.targets = data[1]
 
-    class CurrentTestModel(EvalModelTemplate):
+    class CurrentTestModel(BoringModel):
         rank = 0
         transfer_batch_to_device_hook_rank = None
         on_before_batch_transfer_hook_rank = None
@@ -125,7 +125,7 @@ def test_prepare_batch_for_transfer():
             return batch
 
     model = CurrentTestModel()
-    batch = CustomBatch((torch.zeros(5, 28), torch.ones(5, 1, dtype=torch.long)))
+    batch = CustomBatch((torch.zeros(5, 32), torch.ones(5, 1, dtype=torch.long)))
 
     trainer = Trainer(gpus=1)
     trainer.accelerator_backend = GPUAccelerator(trainer)
