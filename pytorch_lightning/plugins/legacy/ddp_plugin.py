@@ -121,14 +121,14 @@ class DDPPlugin(LightningPlugin):
         Override to handle custom edge case.
 
         Args:
-            args: Inputs to the model.
             model: Model to train.
+            args: Inputs to the model.
 
         Returns:
             args moved to correct device if needed.
         """
         if self.is_running_single_process_per_device:
-            args = model.transfer_batch_to_device(args, model.device)
+            args = model._prepare_batch_for_transfer(args)
         return args
 
     def optimizer_state(self, optimizer: Optimizer) -> dict:
