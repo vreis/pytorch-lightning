@@ -532,7 +532,7 @@ class DataHooks:
         - :class:`list`
         - :class:`dict`
         - :class:`tuple`
-        - :class:`torchtext.data.batch.Batch`
+        - :class:`~torchtext.data.batch.Batch`
 
         For anything else, you need to define how the data is moved to the target device (CPU, GPU, TPU, ...).
 
@@ -611,6 +611,7 @@ class DataHooks:
             A batch of data
 
         Example::
+
             def on_after_batch_transfer(self, batch):
                 batch['x'] = gpu_transforms(batch['x'])
                 return batch
