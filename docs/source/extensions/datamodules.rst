@@ -287,6 +287,8 @@ transfer_batch_to_device
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Override to define how you want to move an arbitrary batch to a device.
 
+.. note:: This hook only runs on single gpu training (no data-parallel) or with sharded plugin.
+
 .. testcode::
 
     class MNISTDataModule(LightningDataModule):
@@ -300,6 +302,8 @@ on_before_batch_transfer
 ^^^^^^^^^^^^^^^^^^^^^^^^
 Override to alter or apply batch augmentations to your batch before it is transferred to the device.
 
+.. note:: This hook only runs on single gpu training (no data-parallel) or with sharded plugin.
+
 .. testcode::
 
     class MNISTDataModule(LightningDataModule):
@@ -311,6 +315,8 @@ on_after_batch_transfer
 ^^^^^^^^^^^^^^^^^^^^^^^
 Override to alter or apply batch augmentations to your batch after it is transferred to the device.
 
+.. note:: This hook only runs on single gpu training (no data-parallel) or with sharded plugin.
+
 .. testcode::
 
     class MNISTDataModule(LightningDataModule):
@@ -319,7 +325,7 @@ Override to alter or apply batch augmentations to your batch after it is transfe
             return batch
 
 
-.. note:: To decouple your data from transforms you can parametrize them via `__init__`.
+.. note:: To decouple your data from transforms you can parametrize them via ``__init__``.
 
 .. code-block:: python
 
