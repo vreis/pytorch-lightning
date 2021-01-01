@@ -118,7 +118,17 @@ class DDPPlugin(LightningPlugin):
 
     def on_before_forward(self, model: LightningModule, *args):
         """
-        Override to handle custom edge case.
+        Override to handle custom input to device logic. For DDP, no logic is required as this is handled internally
+        within the DDP wrapper.
+
+        Example::
+
+            def on_before_forward(self, model, *args):
+                args = super().on_before_forward(*args)
+                batch, batch_idx = args
+                batch = batch.to(model.device)
+                args[0] = batch
+                return args
 
         Args:
             model: Model to train.
@@ -128,7 +138,9 @@ class DDPPlugin(LightningPlugin):
             args moved to correct device if needed.
         """
         if self.is_running_single_process_per_device:
-            args = model._prepare_batch_for_transfer(args)
+            args = list(args)
+            args[0] = model._prepare_batch_for_transfer(args[0])
+
         return args
 
     def optimizer_state(self, optimizer: Optimizer) -> dict:
