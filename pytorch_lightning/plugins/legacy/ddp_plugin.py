@@ -118,17 +118,7 @@ class DDPPlugin(LightningPlugin):
 
     def on_before_forward(self, model: LightningModule, *args):
         """
-        Override to handle custom input to device logic. For DDP, no logic is required as this is handled internally
-        within the DDP wrapper.
-
-        Example::
-
-            def on_before_forward(self, model, *args):
-                args = super().on_before_forward(*args)
-                batch, batch_idx = args
-                batch = batch.to(model.device)
-                args[0] = batch
-                return args
+        Override to handle custom edge case.
 
         Args:
             model: Model to train.
