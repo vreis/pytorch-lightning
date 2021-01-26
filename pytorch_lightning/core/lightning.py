@@ -1601,7 +1601,7 @@ class LightningModule(
                 )
             input_sample = self.example_input_array
 
-        input_sample = self.transfer_batch_to_device(input_sample)
+        input_sample = self._prepare_batch_for_transfer(input_sample)
 
         if "example_outputs" not in kwargs:
             self.eval()
@@ -1664,19 +1664,20 @@ class LightningModule(
         """
         mode = self.training
 
-        with torch.no_grad():
-            if method == 'script':
-                torchscript_module = torch.jit.script(self.eval(), **kwargs)
-            elif method == 'trace':
-                # if no example inputs are provided, try to see if model has example_input_array set
-                if example_inputs is None:
-                    example_inputs = self.example_input_array
-                # automatically send example inputs to the right device and use trace
-                example_inputs = self._prepare_batch_for_transfer(example_inputs)
-                torchscript_module = torch.jit.trace(func=self.eval(), example_inputs=example_inputs, **kwargs)
-            else:
-                raise ValueError(f"The 'method' parameter only supports 'script' or 'trace', but value given was:"
-                                 f"{method}")
+        if method == 'script':
+            torchscript_module = torch.jit.script(self.eval(), **kwargs)
+        elif method == 'trace':
+            # if no example inputs are provided, try to see if model has example_input_array set
+            if example_inputs is None:
+                example_inputs = self.example_input_array
+            # automatically send example inputs to the right device and use trace
+            example_inputs = self._prepare_batch_for_transfer(example_inputs)
+            torchscript_module = torch.jit.trace(func=self.eval(), example_inputs=example_inputs, **kwargs)
+        else:
+            raise ValueError(
+                f"The 'method' parameter only supports 'script' or 'trace', but value given was: {method}"
+            )
+
         self.train(mode)
 
         if file_path is not None:

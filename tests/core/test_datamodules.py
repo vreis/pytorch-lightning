@@ -13,7 +13,7 @@
 # limitations under the License.
 import pickle
 from argparse import ArgumentParser
-from typing import Any, Dict, Optional
+from typing import Any, Dict
 from unittest.mock import MagicMock
 
 import pytest
@@ -424,14 +424,9 @@ def test_dm_prepare_batch_for_transfer(tmpdir):
             batch.targets = batch.targets.to(device)
             return batch
 
-<<<<<<< HEAD
     dm = CurrentTestDM()
     model = BoringModel()
 
-=======
-    model = BoringModel()
-    dm = CurrentTestDM()
->>>>>>> pep and BoringModel
     batch = CustomBatch((torch.zeros(5, 32), torch.ones(5, 1, dtype=torch.long)))
 
     trainer = Trainer(gpus=1)
