@@ -26,7 +26,7 @@ PATH_ROOT = os.path.join(PATH_HERE, '..', '..')
 sys.path.insert(0, os.path.abspath(PATH_ROOT))
 
 FOLDER_GENERATED = 'generated'
-SPHINX_MOCK_REQUIREMENTS = int(os.environ.get('SPHINX_MOCK_REQUIREMENTS', True))
+SPHINX_MOCK_REQUIREMENTS = int(os.environ.get('SPHINX_MOCK_REQUIREMENTS', 1))
 if SPHINX_MOCK_REQUIREMENTS:
     builtins.__LIGHTNING_SETUP__ = True
 
